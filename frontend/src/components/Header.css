@@ -75,6 +75,16 @@
   color: #2563eb;
 }
 
+.nav-button.logout-button {
+  color: #dc2626;
+  margin-left: 8px;
+}
+
+.nav-button.logout-button:hover {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
 @media (max-width: 768px) {
   .header-content {
     flex-direction: column;

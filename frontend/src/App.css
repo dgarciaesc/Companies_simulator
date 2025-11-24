@@ -20,17 +20,6 @@
   gap: 20px;
 }
 
-.sidebar {
-  flex: 0 0 280px;
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  height: fit-content;
-  position: sticky;
-  top: 80px;
-}
-
 .content {
   flex: 1;
   display: flex;
@@ -41,10 +30,5 @@
 @media (max-width: 968px) {
   .main-container {
     flex-direction: column;
-  }
-
-  .sidebar {
-    flex: 1;
-    position: static;
   }
 }

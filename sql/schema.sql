@@ -6,13 +6,25 @@ CREATE TABLE company (
     created_at TIMESTAMPTZ DEFAULT now()
 );
 
+CREATE TABLE users (
+    id              BIGSERIAL PRIMARY KEY,
+    email           TEXT NOT NULL UNIQUE,
+    password_hash   TEXT NOT NULL,
+    company_id      BIGINT REFERENCES company(id),
+    created_at      TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_users_email ON users(email);
+
 CREATE TABLE product (
-    id             BIGSERIAL PRIMARY KEY,
-    company_id     BIGINT NOT NULL REFERENCES company(id),
-    name           TEXT NOT NULL,
-    sku            TEXT,
-    marginal_cost  NUMERIC(12,4) NOT NULL,
-    created_at     TIMESTAMPTZ DEFAULT now()
+    id                  BIGSERIAL PRIMARY KEY,
+    company_id          BIGINT NOT NULL REFERENCES company(id),
+    name                TEXT NOT NULL,
+    sku                 TEXT,
+    marginal_cost       NUMERIC(12,4) NOT NULL,
+    market_perception   TEXT,
+    additional_info     TEXT,
+    created_at          TIMESTAMPTZ DEFAULT now()
 );
 
 CREATE INDEX idx_product_company ON product(company_id);

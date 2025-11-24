@@ -1,27 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Header from './components/Header';
+import Login from './components/Login';
+import WelcomeModal from './components/WelcomeModal';
 import CompanySelector from './components/CompanySelector';
 import ProductsList from './components/ProductsList';
 import HistoricalChart from './components/HistoricalChart';
 import { fetchCompanies, fetchProducts, fetchAnnualMetrics } from './api';
 
 function App() {
+  const [user, setUser] = useState(null);
+  const [showWelcome, setShowWelcome] = useState(false);
   const [companies, setCompanies] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [products, setProducts] = useState([]);
   const [historicalData, setHistoricalData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Check if user is already logged in
   useEffect(() => {
-    loadCompanies();
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      loadCompanies();
+    }
+  }, [user]);
 
   useEffect(() => {
     if (selectedCompany) {
       loadCompanyData(selectedCompany.id);
     }
   }, [selectedCompany]);
+
+  const handleLoginSuccess = (userData) => {
+    setUser(userData);
+    setShowWelcome(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    setUser(null);
+    setCompanies([]);
+    setSelectedCompany(null);
+    setProducts([]);
+    setHistoricalData([]);
+  };
 
   const loadCompanies = async () => {
     try {
@@ -55,6 +84,12 @@ function App() {
     }
   };
 
+  const handleProductUpdate = () => {
+    if (selectedCompany) {
+      loadCompanyData(selectedCompany.id);
+    }
+  };
+
   const formatHistoricalData = (products, metricsArrays) => {
     const yearMap = {};
 
@@ -76,19 +111,18 @@ function App() {
     return <div className="loading">Loading...</div>;
   }
 
+  // Show login if user is not authenticated
+  if (!user) {
+    return <Login onLoginSuccess={handleLoginSuccess} />;
+  }
+
   return (
     <div className="App">
-      <Header companyName={selectedCompany?.name} />
+      <Header companyName={selectedCompany?.name} onLogout={handleLogout} />
+      {showWelcome && <WelcomeModal onClose={() => setShowWelcome(false)} />}
       <div className="main-container">
-        <aside className="sidebar">
-          <CompanySelector
-            companies={companies}
-            selectedCompany={selectedCompany}
-            onSelectCompany={setSelectedCompany}
-          />
-        </aside>
         <main className="content">
-          <ProductsList products={products} />
+          <ProductsList products={products} onProductUpdate={handleProductUpdate} />
           <HistoricalChart data={historicalData} products={products} />
         </main>
       </div>

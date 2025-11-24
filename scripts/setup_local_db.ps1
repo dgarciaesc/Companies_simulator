@@ -3,7 +3,7 @@
 
 param(
     [string]$PostgresUser = "postgres",
-    [string]$Host = "localhost",
+    [string]$HostAddress = "localhost",
     [int]$Port = 5432,
     [string]$TestUser = "test",
     [string]$TestPassword = "test1234",
@@ -23,7 +23,7 @@ try {
 
 Write-Host "Creating user '$TestUser'..." -ForegroundColor Cyan
 $createUserCmd = "CREATE USER $TestUser WITH PASSWORD '$TestPassword';"
-psql -U $PostgresUser -h $Host -p $Port -c $createUserCmd 2>$null
+psql -U $PostgresUser -h $HostAddress -p $Port -c $createUserCmd 2>$null
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "User '$TestUser' created successfully." -ForegroundColor Green
@@ -33,7 +33,7 @@ if ($LASTEXITCODE -eq 0) {
 
 Write-Host "Creating database '$DatabaseName'..." -ForegroundColor Cyan
 $createDbCmd = "CREATE DATABASE $DatabaseName OWNER $TestUser;"
-psql -U $PostgresUser -h $Host -p $Port -c $createDbCmd 2>$null
+psql -U $PostgresUser -h $HostAddress -p $Port -c $createDbCmd 2>$null
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "Database '$DatabaseName' created successfully." -ForegroundColor Green
@@ -43,7 +43,7 @@ if ($LASTEXITCODE -eq 0) {
 
 Write-Host "Granting privileges..." -ForegroundColor Cyan
 $grantCmd = "GRANT ALL PRIVILEGES ON DATABASE $DatabaseName TO $TestUser;"
-psql -U $PostgresUser -h $Host -p $Port -c $grantCmd
+psql -U $PostgresUser -h $HostAddress -p $Port -c $grantCmd
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "Privileges granted successfully." -ForegroundColor Green
@@ -54,7 +54,7 @@ if ($LASTEXITCODE -eq 0) {
 # Test connection
 Write-Host "`nTesting connection..." -ForegroundColor Cyan
 $env:PGPASSWORD = $TestPassword
-psql -U $TestUser -h $Host -p $Port -d $DatabaseName -c "SELECT version();" | Out-Null
+psql -U $TestUser -h $HostAddress -p $Port -d $DatabaseName -c "SELECT version();" | Out-Null
 Remove-Item Env:\PGPASSWORD
 
 if ($LASTEXITCODE -eq 0) {
@@ -64,7 +64,7 @@ if ($LASTEXITCODE -eq 0) {
 }
 
 # Display connection string
-$dbUrl = "postgresql://${TestUser}:${TestPassword}@${Host}:${Port}/${DatabaseName}"
+$dbUrl = "postgresql://${TestUser}:${TestPassword}@${HostAddress}:${Port}/${DatabaseName}"
 Write-Host "`nSetup complete!" -ForegroundColor Green
 Write-Host "Database URL: $dbUrl" -ForegroundColor Cyan
 Write-Host "`nTo use this database, run:" -ForegroundColor Cyan

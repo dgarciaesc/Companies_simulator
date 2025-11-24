@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+// Use relative path since we have proxy configured in package.json
+const API_BASE_URL = '/api';
 
 export const fetchCompanies = async () => {
   try {
@@ -43,5 +44,25 @@ export const fetchAnnualMetrics = async (productId) => {
       { year: 2022, revenue: 125000, market_share: 0.30, demand: 6000 },
       { year: 2023, revenue: 150000, market_share: 0.35, demand: 7000 }
     ];
+  }
+};
+
+export const updateProductPrice = async (productId, price) => {
+  try {
+    const response = await axios.put(`${API_BASE_URL}/products/${productId}/price`, { price });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating product price:', error);
+    throw error;
+  }
+};
+
+export const updateProductName = async (productId, name) => {
+  try {
+    const response = await axios.put(`${API_BASE_URL}/products/${productId}/name`, { name });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating product name:', error);
+    throw error;
   }
 };

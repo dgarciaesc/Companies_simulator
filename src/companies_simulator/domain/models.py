@@ -5,6 +5,15 @@ from typing import Optional
 
 
 @dataclass
+class User:
+    id: int
+    email: str
+    password_hash: str
+    company_id: Optional[int] = None
+    created_at: Optional[datetime] = None
+
+
+@dataclass
 class Company:
     id: int
     name: str
@@ -18,6 +27,8 @@ class Product:
     name: str
     sku: Optional[str]
     marginal_cost: Decimal
+    market_perception: Optional[str] = None
+    additional_info: Optional[str] = None
     created_at: Optional[datetime] = None
 
 

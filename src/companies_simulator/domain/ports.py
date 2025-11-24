@@ -1,5 +1,6 @@
 from typing import Protocol, List, Optional
-from companies_simulator.domain.models import Company, Product, PricingState, AnnualMetrics
+from decimal import Decimal
+from companies_simulator.domain.models import Company, Product, PricingState, AnnualMetrics, User
 
 
 class RepositoryPort(Protocol):
@@ -20,6 +21,12 @@ class RepositoryPort(Protocol):
     def upsert_pricing_state(self, pricing: PricingState) -> PricingState:
         ...
 
+    def update_product_price(self, product_id: int, price: Decimal) -> None:
+        ...
+
+    def update_product_name(self, product_id: int, name: str) -> None:
+        ...
+
     def get_annual_metrics(self, product_id: int, year: int) -> Optional[AnnualMetrics]:
         ...
 
@@ -27,4 +34,10 @@ class RepositoryPort(Protocol):
         ...
 
     def upsert_annual_metrics(self, metrics: AnnualMetrics) -> AnnualMetrics:
+        ...
+
+    def get_user_by_email(self, email: str) -> Optional[User]:
+        ...
+
+    def create_user(self, email: str, password_hash: str, company_id: Optional[int] = None) -> User:
         ...

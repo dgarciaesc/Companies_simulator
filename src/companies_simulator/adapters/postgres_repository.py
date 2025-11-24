@@ -3,7 +3,7 @@ from decimal import Decimal
 from typing import List, Optional
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine, Row
-from companies_simulator.domain.models import Company, Product, PricingState, AnnualMetrics
+from companies_simulator.domain.models import Company, Product, PricingState, AnnualMetrics, User
 from companies_simulator.domain.ports import RepositoryPort
 
 
@@ -24,6 +24,8 @@ class PostgresRepository(RepositoryPort):
             name=row._mapping["name"],
             sku=row._mapping.get("sku"),
             marginal_cost=Decimal(row._mapping["marginal_cost"]),
+            market_perception=row._mapping.get("market_perception"),
+            additional_info=row._mapping.get("additional_info"),
             created_at=row._mapping.get("created_at"),
         )
 
@@ -62,7 +64,7 @@ class PostgresRepository(RepositoryPort):
             return self._row_to_company(r) if r else None
 
     def list_products(self, company_id: int) -> List[Product]:
-        q = text("SELECT id, company_id, name, sku, marginal_cost, created_at FROM product WHERE company_id = :cid ORDER BY id")
+        q = text("SELECT id, company_id, name, sku, marginal_cost, market_perception, additional_info, created_at FROM product WHERE company_id = :cid ORDER BY id")
         with self.engine.connect() as conn:
             res = conn.execute(q, {"cid": company_id})
             return [self._row_to_product(r) for r in res]
@@ -119,6 +121,38 @@ class PostgresRepository(RepositoryPort):
                     },
                 ).first()
                 return self._row_to_pricing(r)
+
+    def update_product_price(self, product_id: int, price: Decimal) -> None:
+        with self.engine.begin() as conn:
+            # Update or insert pricing state with new price
+            existing = conn.execute(
+                text("SELECT id FROM product_pricing_state WHERE product_id = :pid"),
+                {"pid": product_id}
+            ).first()
+            
+            if existing:
+                conn.execute(
+                    text("UPDATE product_pricing_state SET current_price = :price WHERE product_id = :pid"),
+                    {"price": price, "pid": product_id}
+                )
+            else:
+                # If no pricing state exists, create one with default values
+                conn.execute(
+                    text(
+                        """
+                        INSERT INTO product_pricing_state (product_id, current_price, price_elasticity)
+                        VALUES (:pid, :price, 1.0)
+                        """
+                    ),
+                    {"pid": product_id, "price": price}
+                )
+
+    def update_product_name(self, product_id: int, name: str) -> None:
+        with self.engine.begin() as conn:
+            conn.execute(
+                text("UPDATE product SET name = :name WHERE id = :pid"),
+                {"name": name, "pid": product_id}
+            )
 
     def get_annual_metrics(self, product_id: int, year: int) -> Optional[AnnualMetrics]:
         q = text("SELECT id, product_id, year, revenue, market_share, demand, created_at FROM product_annual_metrics WHERE product_id = :pid AND year = :year")
@@ -181,3 +215,32 @@ class PostgresRepository(RepositoryPort):
                     },
                 ).first()
                 return self._row_to_annual_metrics(r)
+
+    def _row_to_user(self, row: Row) -> User:
+        return User(
+            id=row._mapping["id"],
+            email=row._mapping["email"],
+            password_hash=row._mapping["password_hash"],
+            company_id=row._mapping.get("company_id"),
+            created_at=row._mapping.get("created_at"),
+        )
+
+    def get_user_by_email(self, email: str) -> Optional[User]:
+        q = text("SELECT id, email, password_hash, company_id, created_at FROM users WHERE email = :email")
+        with self.engine.connect() as conn:
+            r = conn.execute(q, {"email": email}).first()
+            return self._row_to_user(r) if r else None
+
+    def create_user(self, email: str, password_hash: str, company_id: Optional[int] = None) -> User:
+        with self.engine.begin() as conn:
+            r = conn.execute(
+                text(
+                    """
+                    INSERT INTO users (email, password_hash, company_id)
+                    VALUES (:email, :password_hash, :company_id)
+                    RETURNING id, email, password_hash, company_id, created_at
+                    """
+                ),
+                {"email": email, "password_hash": password_hash, "company_id": company_id},
+            ).first()
+            return self._row_to_user(r)
