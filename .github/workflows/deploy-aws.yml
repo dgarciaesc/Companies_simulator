@@ -26,6 +26,7 @@ jobs:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USER: ${{ secrets.EC2_USER }}
           EC2_KEY: ${{ secrets.EC2_SSH_KEY }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
           # Setup SSH key
           echo "$EC2_KEY" > ec2_key.pem
@@ -34,37 +35,24 @@ jobs:
           # Add EC2 to known hosts
           ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
           
-          # Create deployment package
-          tar czf deploy.tar.gz \
-            --exclude='.git' \
-            --exclude='node_modules' \
-            --exclude='.venv' \
-            --exclude='frontend/build' \
-            --exclude='__pycache__' \
-            .
-          
-          # Copy to EC2
-          scp -i ec2_key.pem deploy.tar.gz ${EC2_USER}@${EC2_HOST}:/tmp/
-          
           # Execute deployment
           ssh -i ec2_key.pem ${EC2_USER}@${EC2_HOST} << 'ENDSSH'
             set -e
-            cd ~
+            cd ~/companies_simulator
             
-            # Backup current deployment
-            if [ -d "companies_simulator" ]; then
-              cp -r companies_simulator companies_simulator_backup_$(date +%Y%m%d_%H%M%S)
-            fi
-            
-            # Extract new version
-            mkdir -p companies_simulator
-            tar xzf /tmp/deploy.tar.gz -C companies_simulator
-            rm /tmp/deploy.tar.gz
+            # Pull latest changes
+            echo "📥 Pulling latest changes..."
+            git pull origin main
             
             # Run deployment script
-            cd companies_simulator
-            chmod +x deploy.sh
-            ./deploy.sh
+            echo "🚀 Running deployment..."
+            export DB_PASSWORD="${DB_PASSWORD}"
+            chmod +x deploy-aws.sh
+            ./deploy-aws.sh
+            
+            # Fix permissions for Nginx
+            chmod +x /home/ubuntu
+            chmod -R 755 /home/ubuntu/companies_simulator/frontend/build
           ENDSSH
           
           # Cleanup

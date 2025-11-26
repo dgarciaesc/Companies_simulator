@@ -17,7 +17,7 @@ pip install -r requirements.txt
 # Install/update frontend dependencies and build
 echo "📦 Installing Node.js dependencies..."
 cd frontend
-npm ci
+npm install
 npm run build
 cd ..
 
