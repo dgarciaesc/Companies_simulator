@@ -35,8 +35,9 @@ jobs:
             set -e
             cd ~/companies_simulator
             
-            # Pull latest changes
+            # Stash any local changes and pull latest
             echo "📥 Pulling latest changes..."
+            git stash
             git pull origin main
             
             # Run deployment script
