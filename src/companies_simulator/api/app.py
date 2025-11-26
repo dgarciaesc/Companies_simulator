@@ -138,6 +138,27 @@ def update_product_name(product_id):
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/api/companies/<int:company_id>/name', methods=['PUT'])
+def update_company_name(company_id):
+    """Update company name."""
+    logger.info(f"Received PUT request for company name {company_id}")
+    try:
+        data = request.get_json()
+        if not data or 'name' not in data:
+            return jsonify({'error': 'Name is required'}), 400
+        
+        name = str(data['name'])
+        logger.info(f"Updating company {company_id} with name {name}")
+        repository.update_company_name(company_id, name)
+        
+        return jsonify({'success': True, 'company_id': company_id, 'name': name})
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        logger.error(f"Error updating company name: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/api/products/<int:product_id>/metrics', methods=['GET'])
 def get_product_metrics(product_id):
     """Get annual metrics for a product."""

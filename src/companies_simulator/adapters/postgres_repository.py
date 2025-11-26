@@ -154,6 +154,13 @@ class PostgresRepository(RepositoryPort):
                 {"name": name, "pid": product_id}
             )
 
+    def update_company_name(self, company_id: int, name: str) -> None:
+        with self.engine.begin() as conn:
+            conn.execute(
+                text("UPDATE company SET name = :name WHERE id = :cid"),
+                {"name": name, "cid": company_id}
+            )
+
     def get_annual_metrics(self, product_id: int, year: int) -> Optional[AnnualMetrics]:
         q = text("SELECT id, product_id, year, revenue, market_share, demand, created_at FROM product_annual_metrics WHERE product_id = :pid AND year = :year")
         with self.engine.connect() as conn:

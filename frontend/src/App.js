@@ -90,6 +90,23 @@ function App() {
     }
   };
 
+  const handleCompanyNameUpdate = (newName) => {
+    // Update the selected company name in state
+    setSelectedCompany(prev => ({
+      ...prev,
+      name: newName
+    }));
+    
+    // Update the companies list
+    setCompanies(prev => 
+      prev.map(company => 
+        company.id === selectedCompany.id 
+          ? { ...company, name: newName }
+          : company
+      )
+    );
+  };
+
   const formatHistoricalData = (products, metricsArrays) => {
     const yearMap = {};
 
@@ -119,7 +136,14 @@ function App() {
   return (
     <div className="App">
       <Header companyName={selectedCompany?.name} onLogout={handleLogout} />
-      {showWelcome && <WelcomeModal onClose={() => setShowWelcome(false)} />}
+      {showWelcome && (
+        <WelcomeModal 
+          onClose={() => setShowWelcome(false)} 
+          companyId={selectedCompany?.id}
+          companyName={selectedCompany?.name}
+          onCompanyNameUpdate={handleCompanyNameUpdate}
+        />
+      )}
       <div className="main-container">
         <main className="content">
           <ProductsList products={products} onProductUpdate={handleProductUpdate} />
