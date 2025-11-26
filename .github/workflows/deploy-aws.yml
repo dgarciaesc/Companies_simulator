@@ -27,6 +27,7 @@ jobs:
           
           # Create .ssh directory and add EC2 to known hosts
           mkdir -p ~/.ssh
+          touch ~/.ssh/known_hosts
           ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
           
           # Execute deployment
