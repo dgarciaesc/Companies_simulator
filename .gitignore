@@ -76,3 +76,8 @@ frontend/yarn-error.log*
 # Logs
 *.log
 logs/
+
+# GCP & Deployment
+*.key
+*.json.key
+gcp-key.json
