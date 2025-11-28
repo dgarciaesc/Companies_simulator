@@ -3,6 +3,7 @@ import './App.css';
 import Header from './components/Header';
 import Login from './components/Login';
 import WelcomeModal from './components/WelcomeModal';
+import SideNavigation from './components/SideNavigation';
 import CompanySelector from './components/CompanySelector';
 import ProductsList from './components/ProductsList';
 import HistoricalChart from './components/HistoricalChart';
@@ -17,6 +18,7 @@ function App() {
   const [products, setProducts] = useState([]);
   const [historicalData, setHistoricalData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeSection, setActiveSection] = useState('marketing');
 
   // Check if user is already logged in
   useEffect(() => {
@@ -145,18 +147,30 @@ function App() {
           onCompanyNameUpdate={handleCompanyNameUpdate}
         />
       )}
-      <div className="main-container">
-        <main className="content">
-          <div className="dashboard-grid">
-            <div className="products-section">
-              <ProductsList products={products} onProductUpdate={handleProductUpdate} />
-            </div>
-            <div className="marketing-section">
-              {selectedCompany && <MarketingWidget companyId={selectedCompany.id} />}
-            </div>
-          </div>
-          <HistoricalChart data={historicalData} products={products} />
-        </main>
+      <div className="app-layout">
+        <SideNavigation activeSection={activeSection} onSectionChange={setActiveSection} />
+        <div className="main-container">
+          <main className="content">
+            {activeSection === 'marketing' && (
+              <>
+                <div className="dashboard-grid">
+                  <div className="products-section">
+                    <ProductsList products={products} onProductUpdate={handleProductUpdate} />
+                  </div>
+                  <div className="marketing-section">
+                    {selectedCompany && <MarketingWidget companyId={selectedCompany.id} />}
+                  </div>
+                </div>
+                <HistoricalChart data={historicalData} products={products} />
+              </>
+            )}
+            {activeSection === 'finance' && <div className="section-placeholder">Finance Dashboard</div>}
+            {activeSection === 'production' && <div className="section-placeholder">Production Dashboard</div>}
+            {activeSection === 'research' && <div className="section-placeholder">Research Dashboard</div>}
+            {activeSection === 'operations' && <div className="section-placeholder">Operations Dashboard</div>}
+            {activeSection === 'geopolitics' && <div className="section-placeholder">Geopolitics Dashboard</div>}
+          </main>
+        </div>
       </div>
     </div>
   );
