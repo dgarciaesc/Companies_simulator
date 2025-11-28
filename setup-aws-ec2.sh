@@ -138,7 +138,7 @@ server {
     # Frontend - serve built React app
     location / {
         root /home/$USER/companies_simulator/frontend/build;
-        try_files \$uri /index.html;
+        try_files \$uri \$uri/ /index.html;
         add_header Cache-Control "public, max-age=3600";
     }
 
