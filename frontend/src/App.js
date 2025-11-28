@@ -18,7 +18,7 @@ function App() {
   const [products, setProducts] = useState([]);
   const [historicalData, setHistoricalData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeSection, setActiveSection] = useState('marketing');
+  const [activeSection, setActiveSection] = useState('general');
 
   // Check if user is already logged in
   useEffect(() => {
@@ -151,6 +151,19 @@ function App() {
         <SideNavigation activeSection={activeSection} onSectionChange={setActiveSection} />
         <div className="main-container">
           <main className="content">
+            {activeSection === 'general' && (
+              <>
+                <div className="dashboard-grid">
+                  <div className="products-section">
+                    <ProductsList products={products} onProductUpdate={handleProductUpdate} />
+                  </div>
+                  <div className="marketing-section">
+                    {selectedCompany && <MarketingWidget companyId={selectedCompany.id} />}
+                  </div>
+                </div>
+                <HistoricalChart data={historicalData} products={products} />
+              </>
+            )}
             {activeSection === 'marketing' && (
               <>
                 <div className="dashboard-grid">

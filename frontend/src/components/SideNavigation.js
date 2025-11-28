@@ -3,6 +3,7 @@ import './SideNavigation.css';
 
 const SideNavigation = ({ activeSection, onSectionChange }) => {
   const sections = [
+    { id: 'general', label: 'General', icon: '📊' },
     { id: 'finance', label: 'Finance', icon: '💰' },
     { id: 'production', label: 'Production', icon: '🏭' },
     { id: 'research', label: 'Research', icon: '🔬' },
@@ -13,11 +14,6 @@ const SideNavigation = ({ activeSection, onSectionChange }) => {
 
   return (
     <nav className="side-navigation">
-      <div className="nav-header">
-        <span className="nav-logo">🏢</span>
-        <span className="nav-title">Dashboard</span>
-      </div>
-      
       <ul className="nav-list">
         {sections.map(section => (
           <li key={section.id}>
