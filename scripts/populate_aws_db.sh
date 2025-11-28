@@ -20,11 +20,14 @@ echo "Project Root: $PROJECT_ROOT"
 echo "Database: $DB_NAME"
 
 # Check if virtual environment exists, activate it
-if [ -d "$PROJECT_ROOT/venv" ]; then
+if [ -d "$PROJECT_ROOT/.venv" ]; then
+    echo "Activating virtual environment..."
+    source "$PROJECT_ROOT/.venv/bin/activate"
+elif [ -d "$PROJECT_ROOT/venv" ]; then
     echo "Activating virtual environment..."
     source "$PROJECT_ROOT/venv/bin/activate"
 else
-    echo "WARNING: Virtual environment not found at $PROJECT_ROOT/venv"
+    echo "WARNING: Virtual environment not found"
     echo "Make sure Python dependencies are installed"
 fi
 
@@ -34,7 +37,7 @@ export DATABASE_URL="$DATABASE_URL"
 
 echo "Running population script..."
 cd "$PROJECT_ROOT"
-python scripts/populate_db.py
+python3 scripts/populate_db.py
 
 echo ""
 echo "=== Database populated successfully ==="
