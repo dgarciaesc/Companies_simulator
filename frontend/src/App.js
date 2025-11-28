@@ -48,7 +48,6 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem('user');
     setUser(null);
-    setCompanies([]);
     setSelectedCompany(null);
     setProducts([]);
     setHistoricalData([]);
@@ -57,7 +56,6 @@ function App() {
   const loadCompanies = async () => {
     try {
       const data = await fetchCompanies();
-      setCompanies(data);
       if (data.length > 0) {
         setSelectedCompany(data[0]);
       }
@@ -98,15 +96,6 @@ function App() {
       ...prev,
       name: newName
     }));
-    
-    // Update the companies list
-    setCompanies(prev => 
-      prev.map(company => 
-        company.id === selectedCompany.id 
-          ? { ...company, name: newName }
-          : company
-      )
-    );
   };
 
   const formatHistoricalData = (products, metricsArrays) => {
