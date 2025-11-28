@@ -152,7 +152,6 @@ const MarketingWidget = ({ companyId }) => {
       </div>
 
       <div className="widget-footer">
-        <small className="last-updated">Last updated: Now</small>
       </div>
     </div>
   );

@@ -1,17 +1,18 @@
 .marketing-widget {
-  background: linear-gradient(135deg, #fff9e6 0%, #fff5cc 100%);
+  background: white;
   border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.15);
-  border: 2px solid #ffc107;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
   min-height: 320px;
   display: flex;
   flex-direction: column;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .marketing-widget:hover {
-  box-shadow: 0 8px 20px rgba(255, 152, 0, 0.25);
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transform: translateY(-2px);
 }
 
@@ -30,7 +31,7 @@
   justify-content: space-between;
   margin-bottom: 20px;
   padding-bottom: 12px;
-  border-bottom: 2px solid rgba(255, 152, 0, 0.3);
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .widget-title {
@@ -42,7 +43,7 @@
 .widget-title h3 {
   margin: 0;
   font-size: 1.2rem;
-  color: #e65100;
+  color: #111827;
   font-weight: 700;
 }
 
@@ -126,10 +127,11 @@
 }
 
 .indicator {
-  background: rgba(255, 255, 255, 0.8);
+  background: #f9fafb;
   padding: 12px;
   border-radius: 8px;
-  border-left: 4px solid #ff9800;
+  border: 1px solid #e5e7eb;
+  border-left: 4px solid #6b7280;
 }
 
 .indicator label {
@@ -145,7 +147,7 @@
 .indicator-value {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #e65100;
+  color: #111827;
 }
 
 .widget-chart-section {
@@ -171,9 +173,10 @@
   gap: 8px;
   flex: 1;
   min-height: 80px;
-  background: rgba(255, 255, 255, 0.5);
+  background: #f9fafb;
   padding: 12px 8px;
   border-radius: 8px;
+  border: 1px solid #e5e7eb;
 }
 
 .chart-bar-container {
@@ -186,7 +189,7 @@
 
 .chart-bar {
   width: 100%;
-  background: linear-gradient(180deg, #ff9800 0%, #f57c00 100%);
+  background: linear-gradient(180deg, #6b7280 0%, #4b5563 100%);
   border-radius: 4px 4px 0 0;
   min-height: 4px;
   transition: all 0.3s ease;
@@ -194,7 +197,7 @@
 }
 
 .chart-bar:hover {
-  background: linear-gradient(180deg, #ffb74d 0%, #ff9800 100%);
+  background: linear-gradient(180deg, #9ca3af 0%, #6b7280 100%);
   filter: brightness(1.1);
 }
 
@@ -212,12 +215,7 @@
   display: flex;
   justify-content: flex-end;
   padding-top: 12px;
-  border-top: 1px solid rgba(255, 152, 0, 0.2);
-}
-
-.last-updated {
-  color: #999;
-  font-size: 0.75rem;
+  border-top: none;
 }
 
 @media (max-width: 768px) {
