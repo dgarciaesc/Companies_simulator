@@ -4,7 +4,6 @@ import Header from './components/Header';
 import Login from './components/Login';
 import WelcomeModal from './components/WelcomeModal';
 import SideNavigation from './components/SideNavigation';
-import CompanySelector from './components/CompanySelector';
 import ProductsList from './components/ProductsList';
 import HistoricalChart from './components/HistoricalChart';
 import MarketingWidget from './components/MarketingWidget';
@@ -13,7 +12,6 @@ import { fetchCompanies, fetchProducts, fetchAnnualMetrics } from './api';
 function App() {
   const [user, setUser] = useState(null);
   const [showWelcome, setShowWelcome] = useState(false);
-  const [companies, setCompanies] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [products, setProducts] = useState([]);
   const [historicalData, setHistoricalData] = useState([]);
@@ -39,6 +37,7 @@ function App() {
     if (selectedCompany) {
       loadCompanyData(selectedCompany.id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCompany]);
 
   const handleLoginSuccess = (userData) => {

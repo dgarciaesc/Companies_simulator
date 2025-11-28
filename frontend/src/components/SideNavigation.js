@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './SideNavigation.css';
 
 const SideNavigation = ({ activeSection, onSectionChange }) => {

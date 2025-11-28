@@ -5,13 +5,13 @@ const MarketingWidget = ({ companyId }) => {
   const [marketingData, setMarketingData] = useState(null);
   const [historicalData, setHistoricalData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
     if (companyId) {
       loadMarketingData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [companyId]);
 
   const loadMarketingData = async () => {
@@ -24,10 +24,8 @@ const MarketingWidget = ({ companyId }) => {
       const data = await response.json();
       setMarketingData(data);
       setHistoricalData(data.historical || []);
-      setError(null);
     } catch (err) {
       console.error('Error loading marketing data:', err);
-      setError(err.message);
       // Set default data if loading fails
       setMarketingData({
         current_budget_spent: 0,
