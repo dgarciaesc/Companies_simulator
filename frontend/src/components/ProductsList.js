@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import './ProductsList.css';
-import { updateProductPrice, updateProductName } from '../api';
+import { updateProductPrice, updateProductName, createProduct } from '../api';
+import CreateProductModal from './CreateProductModal';
+import CreateProductNameModal from './CreateProductNameModal';
 
-const ProductsList = ({ products, onProductUpdate }) => {
+const ProductsList = ({ products, onProductUpdate, companyId }) => {
   const [editingPriceId, setEditingPriceId] = useState(null);
   const [editingNameId, setEditingNameId] = useState(null);
   const [priceValues, setPriceValues] = useState({});
   const [nameValues, setNameValues] = useState({});
   const [showInfoModal, setShowInfoModal] = useState(null);
+  const [showCreateProductModal, setShowCreateProductModal] = useState(false);
+  const [selectedProductType, setSelectedProductType] = useState(null);
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('es-ES', {
@@ -74,9 +78,60 @@ const ProductsList = ({ products, onProductUpdate }) => {
     setEditingNameId(null);
   };
 
+  const handleProductTypeSelect = (productType) => {
+    setSelectedProductType(productType);
+  };
+
+  const handleProductCreate = async (productName) => {
+    if (!selectedProductType) {
+      alert('Please select a product type');
+      return;
+    }
+
+    try {
+      await createProduct(
+        companyId,
+        productName,
+        selectedProductType.marginalCost,
+        selectedProductType.productionCost
+      );
+      
+      // Reset modals
+      setShowCreateProductModal(false);
+      setSelectedProductType(null);
+      
+      // Refresh products list
+      if (onProductUpdate) {
+        onProductUpdate();
+      }
+    } catch (error) {
+      console.error('Error creating product:', error);
+      alert('Error creating product. Please try again.');
+    }
+  };
+
+  const handleCreateProductClick = () => {
+    setShowCreateProductModal(true);
+  };
+
+  const handleCloseCreateModals = () => {
+    setShowCreateProductModal(false);
+    setSelectedProductType(null);
+  };
+
+
   return (
     <div className="products-list">
-      <h2 className="products-title">Products</h2>
+      <div className="products-header">
+        <h2 className="products-title">Products</h2>
+        <button 
+          className="create-product-btn"
+          onClick={handleCreateProductClick}
+          title="Create new product"
+        >
+          +
+        </button>
+      </div>
       <div className="products-grid">
         {products.map(product => (
           <div key={product.id} className="product-card">
@@ -207,6 +262,21 @@ const ProductsList = ({ products, onProductUpdate }) => {
             </div>
           </div>
         </div>
+      )}
+
+      {showCreateProductModal && !selectedProductType && (
+        <CreateProductModal
+          onTypeSelected={handleProductTypeSelect}
+          onClose={handleCloseCreateModals}
+        />
+      )}
+
+      {selectedProductType && (
+        <CreateProductNameModal
+          productType={selectedProductType}
+          onProductCreate={handleProductCreate}
+          onClose={handleCloseCreateModals}
+        />
       )}
     </div>
   );

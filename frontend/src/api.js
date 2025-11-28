@@ -66,3 +66,18 @@ export const updateProductName = async (productId, name) => {
     throw error;
   }
 };
+
+export const createProduct = async (companyId, productName, marginalCost, productionCost) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/companies/${companyId}/products`, {
+      name: productName,
+      marginal_cost: marginalCost,
+      production_cost: productionCost
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error creating product:', error);
+    throw error;
+  }
+};
+

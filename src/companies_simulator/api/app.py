@@ -94,6 +94,60 @@ def get_company_products(company_id):
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/api/companies/<int:company_id>/products', methods=['POST'])
+def create_product(company_id):
+    """Create a new product for a company."""
+    logger.info(f"Received POST request to create product for company {company_id}")
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'Request body is required'}), 400
+        
+        # Validate required fields
+        required_fields = ['name', 'marginal_cost', 'production_cost']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'error': f'{field} is required'}), 400
+        
+        product_name = str(data['name']).strip()
+        if not product_name:
+            return jsonify({'error': 'Product name cannot be empty'}), 400
+        
+        marginal_cost = Decimal(str(data['marginal_cost']))
+        production_cost = Decimal(str(data['production_cost']))
+        
+        logger.info(f"Creating product '{product_name}' with marginal_cost={marginal_cost}, production_cost={production_cost}")
+        
+        # Create product
+        product = repository.create_product(company_id, product_name, marginal_cost, production_cost)
+        
+        # Get pricing state to include in response
+        pricing = repository.get_pricing_state(product.id)
+        
+        response_data = {
+            'id': product.id,
+            'company_id': product.company_id,
+            'name': product.name,
+            'sku': product.sku,
+            'marginal_cost': float(product.marginal_cost),
+            'market_perception': product.market_perception,
+            'additional_info': product.additional_info,
+            'created_at': product.created_at.isoformat() if product.created_at else None
+        }
+        
+        if pricing:
+            response_data['current_price'] = float(pricing.current_price)
+            response_data['current_demand'] = float(pricing.current_demand) if pricing.current_demand else None
+            response_data['current_market_share'] = float(pricing.current_market_share) if pricing.current_market_share else None
+        
+        return jsonify(response_data), 201
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        logger.error(f"Error creating product: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/api/products/<int:product_id>/price', methods=['PUT'])
 def update_product_price(product_id):
     """Update product price."""

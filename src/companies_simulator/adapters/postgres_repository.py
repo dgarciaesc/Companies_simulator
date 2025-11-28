@@ -334,3 +334,33 @@ class PostgresRepository(RepositoryPort):
             
             return self.get_marketing_state(company_id)
 
+    def create_product(self, company_id: int, name: str, marginal_cost: Decimal, production_cost: Decimal) -> Product:
+        """Create a new product for a company."""
+        with self.engine.begin() as conn:
+            # Insert product
+            r = conn.execute(
+                text(
+                    """
+                    INSERT INTO product (company_id, name, marginal_cost)
+                    VALUES (:company_id, :name, :marginal_cost)
+                    RETURNING id, company_id, name, sku, marginal_cost, market_perception, additional_info, created_at
+                    """
+                ),
+                {"company_id": company_id, "name": name, "marginal_cost": marginal_cost},
+            ).first()
+            
+            product = self._row_to_product(r)
+            
+            # Insert pricing state with production cost as initial price
+            conn.execute(
+                text(
+                    """
+                    INSERT INTO product_pricing_state (product_id, current_price, price_elasticity)
+                    VALUES (:product_id, :current_price, 1.0)
+                    """
+                ),
+                {"product_id": product.id, "current_price": production_cost},
+            )
+            
+            return product
+

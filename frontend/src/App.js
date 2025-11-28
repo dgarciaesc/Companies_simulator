@@ -155,7 +155,7 @@ function App() {
               <>
                 <div className="dashboard-grid">
                   <div className="products-section">
-                    <ProductsList products={products} onProductUpdate={handleProductUpdate} />
+                    <ProductsList products={products} onProductUpdate={handleProductUpdate} companyId={selectedCompany?.id} />
                   </div>
                   <div className="marketing-section">
                     {selectedCompany && <MarketingWidget companyId={selectedCompany.id} />}
@@ -168,7 +168,7 @@ function App() {
               <>
                 <div className="dashboard-grid">
                   <div className="products-section">
-                    <ProductsList products={products} onProductUpdate={handleProductUpdate} />
+                    <ProductsList products={products} onProductUpdate={handleProductUpdate} companyId={selectedCompany?.id} />
                   </div>
                   <div className="marketing-section">
                     {selectedCompany && <MarketingWidget companyId={selectedCompany.id} />}

@@ -1,0 +1,260 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #111827;
+  font-weight: 700;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.modal-body {
+  padding: 32px 24px;
+}
+
+.modal-subtitle {
+  margin: 0 0 24px 0;
+  font-size: 1rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+.product-types-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.product-type-card {
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.product-type-card:hover {
+  border-color: #3b82f6;
+  background: #eff6ff;
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.product-type-card:active {
+  transform: translateY(-2px);
+}
+
+.type-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.product-type-card h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #111827;
+  font-weight: 700;
+}
+
+.type-description {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.type-specs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #d1d5db;
+}
+
+.spec {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+}
+
+.spec-label {
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.spec-value {
+  color: #111827;
+  font-weight: 700;
+}
+
+/* Product Name Input Modal */
+.name-input-modal .modal-body {
+  padding: 32px 24px;
+}
+
+.name-input-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.name-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.name-input-group label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.name-input-group input {
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.name-input-group input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.modal-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-btn-primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.modal-btn-primary:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.modal-btn-primary:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+
+.modal-btn-secondary {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.modal-btn-secondary:hover {
+  background: #d1d5db;
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 0.85rem;
+  margin-top: -12px;
+}
+
+@media (max-width: 640px) {
+  .product-types-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-overlay {
+    padding: 10px;
+  }
+
+  .modal-content {
+    max-height: 95vh;
+  }
+
+  .modal-header {
+    padding: 16px;
+  }
+
+  .modal-body {
+    padding: 16px;
+  }
+}
