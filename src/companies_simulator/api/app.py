@@ -250,6 +250,40 @@ def register():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/api/companies/<int:company_id>/marketing', methods=['GET'])
+def get_company_marketing(company_id):
+    """Get marketing data for a company."""
+    try:
+        marketing_state = repository.get_marketing_state(company_id)
+        if not marketing_state:
+            # Return default marketing state if none exists
+            marketing_state = {
+                'current_budget_spent': 0,
+                'current_brand_perception': 0.5,
+            }
+        else:
+            marketing_state = {
+                'current_budget_spent': float(marketing_state.current_budget_spent),
+                'current_brand_perception': float(marketing_state.current_brand_perception),
+            }
+        
+        # Get historical data (last 3 years)
+        historical = repository.list_marketing_annual(company_id)
+        marketing_state['historical'] = [
+            {
+                'year': m.year,
+                'budget_spent': float(m.budget_spent),
+                'brand_perception': float(m.brand_perception),
+            }
+            for m in historical
+        ]
+        
+        return jsonify(marketing_state)
+    except Exception as e:
+        logger.error(f"Error getting marketing data: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint."""

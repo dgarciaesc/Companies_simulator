@@ -6,6 +6,7 @@ import WelcomeModal from './components/WelcomeModal';
 import CompanySelector from './components/CompanySelector';
 import ProductsList from './components/ProductsList';
 import HistoricalChart from './components/HistoricalChart';
+import MarketingWidget from './components/MarketingWidget';
 import { fetchCompanies, fetchProducts, fetchAnnualMetrics } from './api';
 
 function App() {
@@ -146,7 +147,14 @@ function App() {
       )}
       <div className="main-container">
         <main className="content">
-          <ProductsList products={products} onProductUpdate={handleProductUpdate} />
+          <div className="dashboard-grid">
+            <div className="products-section">
+              <ProductsList products={products} onProductUpdate={handleProductUpdate} />
+            </div>
+            <div className="marketing-section">
+              {selectedCompany && <MarketingWidget companyId={selectedCompany.id} />}
+            </div>
+          </div>
           <HistoricalChart data={historicalData} products={products} />
         </main>
       </div>

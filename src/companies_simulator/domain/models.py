@@ -52,3 +52,23 @@ class AnnualMetrics:
     market_share: Optional[Decimal]
     demand: Optional[Decimal]
     created_at: Optional[datetime] = None
+
+
+@dataclass
+class MarketingState:
+    id: Optional[int]
+    company_id: int
+    current_budget_spent: Decimal
+    current_brand_perception: Decimal
+    last_update_at: Optional[datetime] = None
+
+
+@dataclass
+class MarketingAnnual:
+    id: Optional[int]
+    company_id: int
+    year: int
+    budget_spent: Decimal
+    brand_perception: Decimal
+    created_at: Optional[datetime] = None
+

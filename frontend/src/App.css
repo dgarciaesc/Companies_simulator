@@ -27,8 +27,28 @@
   gap: 20px;
 }
 
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.products-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.marketing-section {
+  display: flex;
+  flex-direction: column;
+}
+
 @media (max-width: 968px) {
   .main-container {
     flex-direction: column;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
   }
 }

@@ -3,7 +3,7 @@ from decimal import Decimal
 from typing import List, Optional
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine, Row
-from companies_simulator.domain.models import Company, Product, PricingState, AnnualMetrics, User
+from companies_simulator.domain.models import Company, Product, PricingState, AnnualMetrics, User, MarketingState, MarketingAnnual
 from companies_simulator.domain.ports import RepositoryPort
 
 
@@ -232,6 +232,25 @@ class PostgresRepository(RepositoryPort):
             created_at=row._mapping.get("created_at"),
         )
 
+    def _row_to_marketing_state(self, row: Row) -> MarketingState:
+        return MarketingState(
+            id=row._mapping["id"],
+            company_id=row._mapping["company_id"],
+            current_budget_spent=Decimal(row._mapping["current_budget_spent"]),
+            current_brand_perception=Decimal(row._mapping["current_brand_perception"]),
+            last_update_at=row._mapping.get("last_update_at"),
+        )
+
+    def _row_to_marketing_annual(self, row: Row) -> MarketingAnnual:
+        return MarketingAnnual(
+            id=row._mapping["id"],
+            company_id=row._mapping["company_id"],
+            year=row._mapping["year"],
+            budget_spent=Decimal(row._mapping["budget_spent"]),
+            brand_perception=Decimal(row._mapping["brand_perception"]),
+            created_at=row._mapping.get("created_at"),
+        )
+
     def get_user_by_email(self, email: str) -> Optional[User]:
         q = text("SELECT id, email, password_hash, company_id, created_at FROM users WHERE email = :email")
         with self.engine.connect() as conn:
@@ -251,3 +270,67 @@ class PostgresRepository(RepositoryPort):
                 {"email": email, "password_hash": password_hash, "company_id": company_id},
             ).first()
             return self._row_to_user(r)
+
+    def get_marketing_state(self, company_id: int) -> Optional[MarketingState]:
+        q = text("SELECT id, company_id, current_budget_spent, current_brand_perception, last_update_at FROM company_marketing_state WHERE company_id = :cid")
+        with self.engine.connect() as conn:
+            r = conn.execute(q, {"cid": company_id}).first()
+            return self._row_to_marketing_state(r) if r else None
+
+    def list_marketing_annual(self, company_id: int) -> list[MarketingAnnual]:
+        q = text("SELECT id, company_id, year, budget_spent, brand_perception, created_at FROM company_marketing_annual WHERE company_id = :cid ORDER BY year DESC LIMIT 3")
+        with self.engine.connect() as conn:
+            res = conn.execute(q, {"cid": company_id})
+            return [self._row_to_marketing_annual(r) for r in res]
+
+    def update_marketing_budget(self, company_id: int, budget_spent: Decimal) -> MarketingState:
+        with self.engine.begin() as conn:
+            # Update or insert marketing state
+            existing = conn.execute(
+                text("SELECT id FROM company_marketing_state WHERE company_id = :cid"),
+                {"cid": company_id}
+            ).first()
+            
+            if existing:
+                conn.execute(
+                    text("UPDATE company_marketing_state SET current_budget_spent = :budget WHERE company_id = :cid"),
+                    {"budget": budget_spent, "cid": company_id}
+                )
+            else:
+                conn.execute(
+                    text(
+                        """
+                        INSERT INTO company_marketing_state (company_id, current_budget_spent, current_brand_perception)
+                        VALUES (:cid, :budget, 0.5)
+                        """
+                    ),
+                    {"cid": company_id, "budget": budget_spent}
+                )
+            
+            return self.get_marketing_state(company_id)
+
+    def update_marketing_perception(self, company_id: int, perception: Decimal) -> MarketingState:
+        with self.engine.begin() as conn:
+            existing = conn.execute(
+                text("SELECT id FROM company_marketing_state WHERE company_id = :cid"),
+                {"cid": company_id}
+            ).first()
+            
+            if existing:
+                conn.execute(
+                    text("UPDATE company_marketing_state SET current_brand_perception = :perception WHERE company_id = :cid"),
+                    {"perception": perception, "cid": company_id}
+                )
+            else:
+                conn.execute(
+                    text(
+                        """
+                        INSERT INTO company_marketing_state (company_id, current_budget_spent, current_brand_perception)
+                        VALUES (:cid, 0, :perception)
+                        """
+                    ),
+                    {"cid": company_id, "perception": perception}
+                )
+            
+            return self.get_marketing_state(company_id)
+

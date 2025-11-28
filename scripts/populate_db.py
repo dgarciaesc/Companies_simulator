@@ -26,7 +26,7 @@ def main():
         if result > 0:
             print(f"Database already has {result} companies. Clearing...")
             # Clear existing data
-            conn.execute(text("TRUNCATE TABLE product_annual_metrics, product_pricing_state, product, users, company RESTART IDENTITY CASCADE"))
+            conn.execute(text("TRUNCATE TABLE company_marketing_annual, company_marketing_state, product_annual_metrics, product_pricing_state, product, users, company RESTART IDENTITY CASCADE"))
             conn.commit()
     
     print("Creating test users...")
@@ -121,6 +121,39 @@ def main():
                     )
                 
                 print(f"    - {product_name} (SKU: {sku})")
+    
+    # Populate marketing data for each company
+    print("\nPopulating marketing data...")
+    with repo.engine.begin() as conn:
+        for company_id in range(1, 6):
+            # Current marketing state
+            conn.execute(
+                text("""
+                    INSERT INTO company_marketing_state (company_id, current_budget_spent, current_brand_perception)
+                    VALUES (:cid, :budget, :perception)
+                """),
+                {
+                    "cid": company_id,
+                    "budget": Decimal("50000") + (Decimal("10000") * company_id),
+                    "perception": Decimal("0.5") + (Decimal("0.1") * company_id)
+                }
+            )
+            
+            # Historical marketing metrics for last 3 years
+            for year in [2023, 2024, 2025]:
+                conn.execute(
+                    text("""
+                        INSERT INTO company_marketing_annual (company_id, year, budget_spent, brand_perception)
+                        VALUES (:cid, :year, :budget, :perception)
+                    """),
+                    {
+                        "cid": company_id,
+                        "year": year,
+                        "budget": Decimal("30000") + (Decimal("8000") * company_id) + (Decimal("5000") * (year - 2023)),
+                        "perception": Decimal("0.3") + (Decimal("0.08") * company_id) + (Decimal("0.05") * (year - 2023))
+                    }
+                )
+    print("  ✓ Marketing data populated")
     
     # Associate first user with Company 1
     with repo.engine.begin() as conn:

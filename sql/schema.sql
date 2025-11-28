@@ -59,3 +59,29 @@ CREATE TABLE product_annual_metrics (
 
 CREATE INDEX idx_pam_product ON product_annual_metrics(product_id);
 CREATE INDEX idx_pam_year ON product_annual_metrics(year);
+
+-- Marketing budget and metrics tables
+CREATE TABLE company_marketing_state (
+    id                      BIGSERIAL PRIMARY KEY,
+    company_id              BIGINT NOT NULL UNIQUE REFERENCES company(id),
+    current_budget_spent    NUMERIC(18,4) DEFAULT 0,
+    current_brand_perception NUMERIC(8,4) DEFAULT 0.5,
+    last_update_at          TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_cms_company ON company_marketing_state(company_id);
+
+CREATE TABLE company_marketing_annual (
+    id              BIGSERIAL PRIMARY KEY,
+    company_id      BIGINT NOT NULL REFERENCES company(id),
+    year            INTEGER NOT NULL,
+    budget_spent    NUMERIC(18,4) NOT NULL DEFAULT 0,
+    brand_perception NUMERIC(8,4) DEFAULT 0.5,
+    created_at      TIMESTAMPTZ DEFAULT now(),
+
+    UNIQUE (company_id, year)
+);
+
+CREATE INDEX idx_cma_company ON company_marketing_annual(company_id);
+CREATE INDEX idx_cma_year ON company_marketing_annual(year);
+
