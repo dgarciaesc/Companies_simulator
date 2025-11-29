@@ -51,6 +51,31 @@
 .header-nav {
   display: flex;
   gap: 8px;
+  align-items: center;
+}
+
+.fiscal-year {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  margin-right: 16px;
+}
+
+.fiscal-year-label {
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.fiscal-year-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #dc2626;
+  min-width: 32px;
+  text-align: center;
 }
 
 .nav-button {

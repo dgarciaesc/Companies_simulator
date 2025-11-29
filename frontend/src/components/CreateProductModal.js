@@ -7,35 +7,35 @@ const PRODUCT_TYPES = {
     productionCost: 2000000,
     marginalCost: 15000,
     description: 'Premium luxury motorcycle',
-    icon: '👑'
+    icon: '/images/luxe_icon.png'
   },
   premium: {
     name: 'Premium',
     productionCost: 1500000,
     marginalCost: 12000,
     description: 'High-end motorcycle',
-    icon: '⭐'
+    icon: '/images/premium_icon.png'
   },
   medium: {
     name: 'Medium',
     productionCost: 1000000,
     marginalCost: 10000,
     description: 'Standard motorcycle',
-    icon: '🏍️'
+    icon: '/images/medium_icon.png'
   },
   cheap: {
     name: 'Cheap',
     productionCost: 700000,
     marginalCost: 7000,
     description: 'Budget motorcycle',
-    icon: '💰'
+    icon: '/images/cheap_icon.png'
   },
   lowcost: {
     name: 'LowCost',
     productionCost: 500000,
     marginalCost: 5000,
     description: 'Economy motorcycle',
-    icon: '🚗'
+    icon: '/images/low_cost.png'
   }
 };
 
@@ -65,9 +65,9 @@ const CreateProductTypeModal = ({ onTypeSelected, onClose }) => {
               <div
                 key={key}
                 className="product-type-card"
-                onClick={() => onTypeSelected(key, type)}
+                onClick={() => onTypeSelected(type)}
               >
-                <div className="type-icon">{type.icon}</div>
+                <img src={type.icon} alt={type.name} className="type-icon" />
                 <h3>{type.name}</h3>
                 <p className="type-description">{type.description}</p>
                 <div className="type-specs">

@@ -112,8 +112,11 @@
 }
 
 .type-icon {
-  font-size: 2.5rem;
-  line-height: 1;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  object-fit: contain;
+  display: block;
 }
 
 .product-type-card h3 {

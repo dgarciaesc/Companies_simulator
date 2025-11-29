@@ -17,9 +17,10 @@ const Header = ({ companyName, onLogout }) => {
           )}
         </div>
         <nav className="header-nav">
-          <button className="nav-button active">Dashboard</button>
-          <button className="nav-button">Analytics</button>
-          <button className="nav-button">Reports</button>
+          <div className="fiscal-year">
+            <span className="fiscal-year-label">Fiscal Year / Turn:</span>
+            <span className="fiscal-year-value">1</span>
+          </div>
           {onLogout && (
             <button className="nav-button logout-button" onClick={onLogout}>
               Sign Out
