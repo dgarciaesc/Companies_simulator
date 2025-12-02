@@ -88,6 +88,14 @@ const ProductsList = ({ products, onProductUpdate, companyId }) => {
       return;
     }
 
+    console.log('Creating product with:', {
+      companyId,
+      productName,
+      marginalCost: selectedProductType.marginalCost,
+      productionCost: selectedProductType.productionCost,
+      selectedProductType
+    });
+
     try {
       await createProduct(
         companyId,

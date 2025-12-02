@@ -1,7 +1,7 @@
 import React from 'react';
 import './Header.css';
 
-const Header = ({ companyName, onLogout }) => {
+const Header = ({ companyName, currentTurn, onLogout }) => {
   return (
     <header className="header">
       <div className="header-content">
@@ -19,8 +19,11 @@ const Header = ({ companyName, onLogout }) => {
         <nav className="header-nav">
           <div className="fiscal-year">
             <span className="fiscal-year-label">Fiscal Year / Turn:</span>
-            <span className="fiscal-year-value">1</span>
+            <span className="fiscal-year-value">{currentTurn || 1}</span>
           </div>
+          <button className="next-turn-button">
+            Next FY/Turn →
+          </button>
           {onLogout && (
             <button className="nav-button logout-button" onClick={onLogout}>
               Sign Out

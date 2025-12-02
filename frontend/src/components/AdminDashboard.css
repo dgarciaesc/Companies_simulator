@@ -1,0 +1,272 @@
+.admin-dashboard {
+  padding: 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.admin-dashboard.loading,
+.admin-dashboard.error {
+  text-align: center;
+  padding: 40px;
+  font-size: 16px;
+}
+
+.admin-dashboard.error {
+  color: #ef4444;
+}
+
+.admin-header {
+  margin-bottom: 32px;
+}
+
+.admin-header h1 {
+  margin: 0 0 24px 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-label {
+  font-size: 14px;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.companies-table {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.companies-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.companies-table thead {
+  background: #f9fafb;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.companies-table thead th {
+  padding: 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.company-row {
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s;
+}
+
+.company-row:hover {
+  background-color: #f9fafb;
+}
+
+.company-row td {
+  padding: 16px;
+  font-size: 14px;
+  color: #111827;
+}
+
+.company-name {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.currency {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+}
+
+.percentage {
+  text-align: right;
+}
+
+.currency.highlight {
+  font-weight: 700;
+  color: #059669;
+}
+
+.expand-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.expand-btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.expanded-row {
+  background: #f9fafb;
+}
+
+.expanded-content {
+  padding: 24px;
+}
+
+.company-details {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.detail-section {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.detail-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 8px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 6px;
+}
+
+.detail-label {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.detail-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.detail-value.negative {
+  color: #dc2626;
+}
+
+.products-table {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.products-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.products-table thead {
+  background: #f3f4f6;
+}
+
+.products-table thead th {
+  padding: 12px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.products-table tbody tr {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.products-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.products-table tbody td {
+  padding: 12px;
+  font-size: 13px;
+  color: #374151;
+}
+
+.products-table .sku {
+  font-family: 'Courier New', monospace;
+  color: #6b7280;
+}
+
+@media (max-width: 1200px) {
+  .admin-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .companies-table {
+    overflow-x: auto;
+  }
+
+  .products-table {
+    overflow-x: auto;
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .companies-table thead th,
+  .company-row td {
+    padding: 12px 8px;
+    font-size: 12px;
+  }
+
+  .expand-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}

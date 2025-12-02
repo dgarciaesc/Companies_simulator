@@ -10,6 +10,7 @@ class User:
     email: str
     password_hash: str
     company_id: Optional[int] = None
+    is_admin: bool = False
     created_at: Optional[datetime] = None
 
 
@@ -17,6 +18,7 @@ class User:
 class Company:
     id: int
     name: str
+    current_turn: int = 1
     created_at: Optional[datetime] = None
 
 
@@ -51,6 +53,9 @@ class AnnualMetrics:
     revenue: Decimal
     market_share: Optional[Decimal]
     demand: Optional[Decimal]
+    price: Optional[Decimal] = None
+    items_sold: Optional[int] = None
+    marginal_cost: Optional[Decimal] = None
     created_at: Optional[datetime] = None
 
 
@@ -70,5 +75,24 @@ class MarketingAnnual:
     year: int
     budget_spent: Decimal
     brand_perception: Decimal
+    created_at: Optional[datetime] = None
+
+
+@dataclass
+class FinanceAnnual:
+    id: Optional[int]
+    company_id: int
+    fiscal_year: int
+    revenue: Decimal
+    operational_costs: Decimal
+    fabrication_costs: Decimal
+    inventory_value: Decimal
+    other_assets: Decimal
+    total_assets: Decimal
+    total_debt: Decimal
+    amortization: Decimal
+    ebit: Decimal
+    ebitda: Decimal
+    free_cash_flow: Decimal
     created_at: Optional[datetime] = None
 

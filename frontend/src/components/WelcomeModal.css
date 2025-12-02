@@ -21,6 +21,33 @@
   overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   animation: slideIn 0.3s ease-out;
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.close-button:hover {
+  background: white;
+  color: #333;
+  transform: rotate(90deg);
 }
 
 @keyframes slideIn {
@@ -75,9 +102,51 @@
 
 .assistant-text {
   display: flex;
+  flex-direction: column;
   gap: 16px;
-  align-items: flex-start;
   flex: 1;
+}
+
+.assistant-text h3 {
+  margin: 0 0 12px 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.assistant-text p {
+  margin: 0 0 12px 0;
+  color: #555;
+  line-height: 1.6;
+}
+
+.assistant-text ul {
+  margin: 12px 0 0 0;
+  padding-left: 24px;
+  color: #555;
+}
+
+.assistant-text li {
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.role-section {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border-left: 4px solid #667eea;
+}
+
+.role-section h3 {
+  margin: 0 0 12px 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.role-section p {
+  margin: 0;
+  color: #555;
 }
 
 .assistant-icon {
@@ -154,22 +223,22 @@
 }
 
 .first-decision {
-  background: #f3e5f5;
-  padding: 24px;
-  border-radius: 10px;
-  border-left: 4px solid #9c27b0;
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 12px;
+  border-left: 4px solid #667eea;
+  margin-bottom: 24px;
 }
 
 .first-decision h3 {
   margin: 0 0 12px 0;
-  color: #7b1fa2;
-  font-size: 1.15rem;
+  color: #333;
+  font-size: 1.1rem;
 }
 
 .first-decision p {
   margin: 0 0 20px 0;
-  font-size: 1rem;
-  color: #333;
+  color: #555;
 }
 
 .company-name-form {

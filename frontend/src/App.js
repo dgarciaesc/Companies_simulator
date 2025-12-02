@@ -3,16 +3,24 @@ import './App.css';
 import Header from './components/Header';
 import Login from './components/Login';
 import WelcomeModal from './components/WelcomeModal';
+import NameCompanyModal from './components/NameCompanyModal';
+import GuidedTooltip from './components/GuidedTooltip';
 import SideNavigation from './components/SideNavigation';
 import ProductsList from './components/ProductsList';
 import HistoricalChart from './components/HistoricalChart';
 import MarketingWidget from './components/MarketingWidget';
+import FinanceDashboard from './components/FinanceDashboard';
+import AdminDashboard from './components/AdminDashboard';
 import { fetchCompanies, fetchProducts, fetchAnnualMetrics } from './api';
 
 function App() {
   const [user, setUser] = useState(null);
   const [showWelcome, setShowWelcome] = useState(false);
+  const [showNameModal, setShowNameModal] = useState(false);
+  const [guidedTourStep, setGuidedTourStep] = useState(null);
   const [selectedCompany, setSelectedCompany] = useState(null);
+  const productsRef = React.useRef(null);
+  const marketingRef = React.useRef(null);
   const [products, setProducts] = useState([]);
   const [historicalData, setHistoricalData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -98,6 +106,36 @@ function App() {
     }));
   };
 
+  const getTourStep = (stepNumber) => {
+    const steps = {
+      1: {
+        currentStep: 1,
+        totalSteps: 2,
+        title: '🏍️ Your Products',
+        description: 'This is where you manage your motorcycle products. Each product represents a different model in your lineup.',
+        details: [
+          'Set prices for each product to compete in the market',
+          'Adjust production costs to optimize your margins',
+          'Track market share and demand for each model',
+          'Monitor revenue and performance over time'
+        ]
+      },
+      2: {
+        currentStep: 2,
+        totalSteps: 2,
+        title: '📢 Marketing Strategy',
+        description: 'Control your marketing investments to boost brand awareness and drive sales. Strategic marketing spending can significantly impact your market position.',
+        details: [
+          'Allocate budget across different marketing channels',
+          'Increase brand awareness to attract more customers',
+          'Monitor ROI on your marketing investments',
+          'Adjust spending based on market conditions and competition'
+        ]
+      }
+    };
+    return steps[stepNumber] || null;
+  };
+
   const formatHistoricalData = (products, metricsArrays) => {
     const yearMap = {};
 
@@ -124,15 +162,61 @@ function App() {
     return <Login onLoginSuccess={handleLoginSuccess} />;
   }
 
+  // Show admin dashboard if user is admin
+  if (user.is_admin) {
+    return (
+      <div className="App">
+        <Header companyName="Admin Panel" currentTurn={null} onLogout={handleLogout} />
+        <div className="app-layout">
+          <div className="main-container">
+            <main className="content">
+              <AdminDashboard />
+            </main>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="App">
-      <Header companyName={selectedCompany?.name} onLogout={handleLogout} />
+      <Header companyName={selectedCompany?.name} currentTurn={selectedCompany?.current_turn} onLogout={handleLogout} />
       {showWelcome && (
         <WelcomeModal 
-          onClose={() => setShowWelcome(false)} 
-          companyId={selectedCompany?.id}
-          companyName={selectedCompany?.name}
+          onClose={() => {
+            setShowWelcome(false);
+            setShowNameModal(true);
+          }}
+        />
+      )}
+      {showNameModal && selectedCompany && (
+        <NameCompanyModal
+          onClose={() => {
+            setShowNameModal(false);
+            setTimeout(() => setGuidedTourStep(1), 500);
+          }}
+          companyId={selectedCompany.id}
+          companyName={selectedCompany.name}
           onCompanyNameUpdate={handleCompanyNameUpdate}
+        />
+      )}
+
+      {guidedTourStep && (
+        <GuidedTooltip
+          targetRef={guidedTourStep === 1 ? productsRef : guidedTourStep === 2 ? marketingRef : null}
+          step={getTourStep(guidedTourStep)}
+          onNext={() => {
+            if (guidedTourStep < 2) {
+              setGuidedTourStep(guidedTourStep + 1);
+            } else {
+              setGuidedTourStep(null);
+              localStorage.setItem('hasSeenGuidedTour', 'true');
+            }
+          }}
+          onSkip={() => {
+            setGuidedTourStep(null);
+            localStorage.setItem('hasSeenGuidedTour', 'true');
+          }}
         />
       )}
       <div className="app-layout">
@@ -142,10 +226,10 @@ function App() {
             {activeSection === 'general' && (
               <>
                 <div className="dashboard-grid">
-                  <div className="products-section">
+                  <div className="products-section" ref={productsRef}>
                     <ProductsList products={products} onProductUpdate={handleProductUpdate} companyId={selectedCompany?.id} />
                   </div>
-                  <div className="marketing-section">
+                  <div className="marketing-section" ref={marketingRef}>
                     {selectedCompany && <MarketingWidget companyId={selectedCompany.id} />}
                   </div>
                 </div>
@@ -165,7 +249,9 @@ function App() {
                 <HistoricalChart data={historicalData} products={products} />
               </>
             )}
-            {activeSection === 'finance' && <div className="section-placeholder">Finance Dashboard</div>}
+            {activeSection === 'finance' && selectedCompany && (
+              <FinanceDashboard companyId={selectedCompany.id} />
+            )}
             {activeSection === 'production' && <div className="section-placeholder">Production Dashboard</div>}
             {activeSection === 'research' && <div className="section-placeholder">Research Dashboard</div>}
             {activeSection === 'operations' && <div className="section-placeholder">Operations Dashboard</div>}
