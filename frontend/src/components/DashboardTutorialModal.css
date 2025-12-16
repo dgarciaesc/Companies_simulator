@@ -1,0 +1,203 @@
+.tutorial-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease;
+}
+
+.tutorial-modal {
+  background: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+  position: relative;
+}
+
+.tutorial-close-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.tutorial-close-button:hover {
+  background: white;
+  color: #333;
+  transform: rotate(90deg);
+}
+
+.tutorial-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 32px 32px 24px;
+  border-radius: 16px 16px 0 0;
+}
+
+.tutorial-header h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.tutorial-body {
+  padding: 32px;
+}
+
+.tutorial-content {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.tutorial-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.tutorial-text {
+  flex: 1;
+}
+
+.tutorial-text h3 {
+  margin: 0 0 12px 0;
+  color: #1f2937;
+  font-size: 1.3rem;
+}
+
+.tutorial-text > p {
+  margin: 0 0 24px 0;
+  color: #4b5563;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.tutorial-section {
+  background: #f9fafb;
+  padding: 16px 20px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  border-left: 4px solid #667eea;
+}
+
+.tutorial-section h4 {
+  margin: 0 0 8px 0;
+  color: #374151;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.tutorial-section p {
+  margin: 0 0 8px 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.tutorial-section ul {
+  margin: 8px 0 0 0;
+  padding-left: 24px;
+}
+
+.tutorial-section li {
+  margin-bottom: 6px;
+  color: #6b7280;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.tutorial-section li strong {
+  color: #374151;
+}
+
+.tutorial-button {
+  width: 100%;
+  padding: 16px 32px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  margin-top: 24px;
+}
+
+.tutorial-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.tutorial-button:active {
+  transform: translateY(0);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .tutorial-content {
+    flex-direction: column;
+  }
+  
+  .tutorial-avatar {
+    width: 100px;
+    height: 100px;
+    align-self: center;
+  }
+  
+  .tutorial-modal {
+    width: 95%;
+    margin: 20px;
+  }
+  
+  .tutorial-body {
+    padding: 24px;
+  }
+}
