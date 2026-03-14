@@ -72,7 +72,9 @@ const MarketingWidget = ({ companyId }) => {
   };
 
   const renderMiniChart = () => {
-    const spends = getSparklineData();
+    const sparklineEntries = (historicalData || []).slice(-3);
+    const spends = sparklineEntries.map(d => d.budget_spent);
+
     if (spends.length === 0) {
       return <div className="no-data">No historical data</div>;
     }
@@ -87,7 +89,7 @@ const MarketingWidget = ({ companyId }) => {
             <div
               className="chart-bar"
               style={{ height: `${height}%` }}
-              title={`Year: ${historicalData[historicalData.length - 3 + index].year}`}
+              title={`Year: ${sparklineEntries[index]?.year ?? 'N/A'}`}
             ></div>
           </div>
         ))}
